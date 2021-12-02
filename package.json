@@ -1,0 +1,20 @@
+{
+  "name": "hacsocializeapi",
+  "version": "1.0.0",
+  "description": "- [Description](#Description)\r - [Technologies Used](#Technologies)\r - [Technical Criteria](#Technical)\r - [Contributing](#contributing)\r - [Language](#language)\r - [User Story](#user_story)",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HacAtac/hacSocializeApi.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HacAtac/hacSocializeApi/issues"
+  },
+  "homepage": "https://github.com/HacAtac/hacSocializeApi#readme"
+}
