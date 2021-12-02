@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/HacAtac/hacSocializeApi/issues"
   },
-  "homepage": "https://github.com/HacAtac/hacSocializeApi#readme"
+  "homepage": "https://github.com/HacAtac/hacSocializeApi#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
