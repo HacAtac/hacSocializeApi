@@ -39,7 +39,7 @@ const UserSchema = new Schema(
 //virtuals are properties that are not stored in the database
 //but are computed on the fly
 //virtuals are useful for displaying data in the front end also for things like counting friends :p
-UserSchema.virtural("friendCount").get(function () {
+UserSchema.virtual("friendCount").get(function () {
   return this.friends.length;
 });
 
