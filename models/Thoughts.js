@@ -42,7 +42,9 @@ const ThoughtSchema = new Schema(
 );
 
 //this virtual is used to get the number of comments for a thought in the thought list page
+//and stores it as reactionCount in the thought object
 //so that it can be displayed in the thought list page or in our case the db
+// then returns the length of reactions array in the thought object subdocument object
 ThoughtSchema.virtual("reactionCount").get(function () {
   return this.reactions.length;
 });
