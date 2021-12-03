@@ -23,4 +23,9 @@ router
   .put(updateUser) // PUT http://localhost:5000/api/users/:id (PUT)
   .delete(deleteUser); // DELETE http://localhost:5000/api/users/:id (DELETE)
 
+// router.route("/:id/friends")
+// https://localhost:5000/api/users/:id/friends
+// https://localhost:5000/api/users/:id/friends/:friendId
+router.route("/:id/friends/:friendsId").post(addFriend).delete(removeFriend);
+
 module.exports = router;

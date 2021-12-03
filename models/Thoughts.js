@@ -1,7 +1,37 @@
-const { Schema, model } = require("mongoose"); //importing mongoose to use it in this file for our database
-const reactionSchema = require("./Reaction");
+const { Schema, model, Types } = require("mongoose"); //require mongoose + Types for ObjectId
 const dateFormat = require("../utils/dateFormat"); //importing dateFormat from utils folder
-// const moment = require("moment");
+
+const ReactionSchema = new Schema(
+  {
+    reactionId: {
+      type: Schema.Types.ObjectId,
+      default: new Types.ObjectId(), //Types.ObjectId() basically generates a new ObjectId for every new Reaction
+    },
+
+    reactionBody: {
+      type: String,
+      required: true,
+      min: 1,
+      mac: 280,
+    },
+
+    username: {
+      type: String,
+      required: true,
+    },
+
+    createdAt: {
+      type: Date,
+      default: Date.now,
+      get: (createdAtVal) => dateFormat(createdAtVal),
+    },
+  },
+  {
+    toJSON: {
+      getters: true,
+    },
+  }
+);
 
 // this is the schema for the thoughts collection
 const ThoughtSchema = new Schema(
@@ -24,11 +54,7 @@ const ThoughtSchema = new Schema(
       type: String,
       required: "You need to provide a thought username!",
     },
-
-    reactions: {
-      reactions: [],
-    },
-    reactions: [reactionSchema],
+    reactions: [ReactionSchema],
   },
   // getters are used to format the date
   // virtuals are used for the comments array in the thought object
