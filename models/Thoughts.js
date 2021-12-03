@@ -1,33 +1,35 @@
 const { Schema, model } = require("mongoose"); //importing mongoose to use it in this file for our database
+const reactionSchema = require("./Reaction");
 const dateFormat = require("../utils/dateFormat"); //importing dateFormat from utils folder
+// const moment = require("moment");
 
 // this is the schema for the thoughts collection
 const ThoughtSchema = new Schema(
   {
-    thoughtName: {
+    thoughtText: {
       type: String, // This makes sure that the name is a string
-      required: "You need to provide a thought name!", //setting an actual error message
+      required: "You need to provide a thought name!", // This sets an acutal error message instead of the default one
+      minlength: 1, //must be between 3 and 100 characters
+      maxlength: 280,
       trim: true, //trim will remove all the white spaces from the beginning and end of the string
     },
-    createdBy: {
-      type: String,
-      required: "You need to provide a thought creator!",
-      trim: true,
-    },
+
     createdAt: {
       type: Date,
       default: Date.now,
       get: (createdAtVal) => dateFormat(createdAtVal),
     },
-    thoughts: [],
-    comments: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Comment",
-      },
-    ],
-  },
 
+    username: {
+      type: String,
+      required: "You need to provide a thought username!",
+    },
+
+    reactions: {
+      reactions: [],
+    },
+    reactions: [reactionSchema],
+  },
   // getters are used to format the date
   // virtuals are used for the comments array in the thought object
   {
@@ -35,17 +37,14 @@ const ThoughtSchema = new Schema(
       getters: true,
       virtuals: true,
     },
+    id: false,
   }
 );
 
 //this virtual is used to get the number of comments for a thought in the thought list page
 //so that it can be displayed in the thought list page or in our case the db
-ThoughtSchema.virtual("commentsCount").get(function () {
-  return this.comments.reduce(
-    (total, comment) => total + comment.replies.length,
-    +1, // +1 for the comment itself so that it is counted as a reply to itself too (the first comment) and not as a reply to no one
-    0 // this is the initial value of the reduce function (the first value of the array) so that the first comment is counted as a reply to itself
-  );
+ThoughtSchema.virtual("reactionCount").get(function () {
+  return this.reactions.length;
 });
 
 const Thought = model("Thought", ThoughtSchema);
