@@ -1,137 +1,135 @@
 const { Thoughts, User } = require("../models");
-
-const ThoughtController = {
-  // GET /thoughts
+//controller for the thoughts database document
+const thoughtController = {
+  // get all thoughts
   getAllThoughts(req, res) {
-    //making a function named getAllThoughts that will get all the thoughts from the database
-    Thoughts.findAll({}) //this will find all the thoughts in the database and store it in an array called thoughts
-      //will return an array of all the thoughts in the database
+    Thoughts.find({}) //mongoose method to find all thoughts in the database
       .populate({
-        //this will populate the user id from the thoughts table with the user table and store it in an array called user
-        //.populate is a monogoose method similar to sequelize join methods or relations
-        path: "reactions", //this is the name of the column in the thoughts table that we want to populate
-        select: "-__v", //this is the name of the column in the user table that we want to populate
+        //populate the user id with the user document
+        //populate the reactions array with the reactions and put it in the reactions property of the thought object
+        path: "reactions",
+        //populate will only return the reactions array
+        select: "-__v", //select the reactions array but not the __v property
       })
-      //will return the thoughts array and the user array
       .populate({
-        //basically means that we want to select all the columns in the thoughts table except the __v column
+        //populate the user id with the user document
+        //populate the thoughts array with the thoughts and put it in the thoughts property of the user object
         path: "thoughts",
+        //select the thoughts array but not the __v property
         select: "-__v",
       })
-      .then((dbThoughtData) => res.json(dbThoughtData)) //this will return the thoughts array and the user array
+      //.select will only return the thoughts array but not the __v property
+      //and the user id will be populated with the user document
+      //and the reactions array will be populated with the reactions and put it in the reactions property of the thought object
+      //and the thoughts array will be populated with the thoughts and put it in the thoughts property of the user object
+      .select("-__v") //select the thoughts array but not the __v property
+      .then((dbThoughtData) => res.json(dbThoughtData)) //return the thoughts array in the json format to the client side or database
       .catch((err) => {
-        //this will catch any errors that may occur
-        res.status(400).json(err); //this will return a status code of 400 and the error message in json format to the client
+        //if there is an error in the database then return the error to the client side or database
+        console.log(err); //log the error to the console
+        res.status(400).json(err); //return the error to the client side or database
       });
   },
-
   // get one thought by it's id
-  getThoughtByid({ params }, res) {
-    Thoughts.findOne({ _id: params.id }) //this will find the thought in the database with the id that is passed in the url
+  getThoughtById({ params }, res) {
+    //destructuring the params object which is the id of the thought to get the id
+    Thoughts.findOne({ _id: params.id }) //then find the thought in the database by the id of the thought
       .then((dbThoughtData) => {
-        //then will return the thought data
-        if (!dbThoughtData) {
-          // if the thought data is not found
-          res.status(404).json({ message: "No thought found with this id" }); //this will return a status code of 404 and the error message in json format to the client
-          return; //returns to the catch block below and does not execute the next line
-        }
-        res.json(dbThoughtData); //this will return the thought data in json format to the client if all goes well
-      })
-      .catch((err) => res.status(400).json(err)); //this will catch any errors that may occur
-  },
+        //then return the thought in the json format to the client side or database
 
-  //create thought to a user
-  createThought({ params }, res) {
-    //this will create a thought to a user with the id that is passed in the url
-    Thoughts.create(body) // were then creating a thought with the body that is passed in the request
+        if (!dbThoughtData) {
+          //if no thought is found then return the error to the client side or database
+          res.status(404).json({ message: "No thought with this ID" }); //
+          return; //return; will stop the function from running further so that the error is not returned to the client side or database twice
+        }
+        res.json(dbThoughtData); //return the thought in the json format to the client side or database
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400).json(err);
+      });
+  },
+  // create thought to a user
+  createThought({ body }, res) {
+    //destructuring the body object which basically is the thought object which is the thought to be created by the user in the database
+    console.log(body); //log the body object to the console to see what is being sent to the database
+    Thoughts.create(body) //create the thought in the database using the destructured body object which is the thought to be created by the user
       .then((thoughtData) => {
-        //this will return the thought data to the client if all goes well
+        //then return the thought in the json format to the client side or database
         return User.findOneAndUpdate(
-          //this is a mongoose method that will find the user with the id that is passed in the url and update the user with the thought id
-          { _id: body.userId }, //this is the id of the user that is passed in the request
-          //$push is a mongoose method that will push the thought id to the user's thoughts array
-          { $push: { thoughts: thoughtData._id } }, //this is the thought id that is passed in the request
-          { new: true } //this is a mongoose method that will return the updated user data
+          //return User.findOneAndUpdate basically finds the user in the database by the id of the user and then updates the thoughts array of the user document with the thought id
+          { _id: body.userId }, //find the user in the database by the id of the user
+          { $push: { thoughts: thoughtData._id } }, //push the thought id to the thoughts array of the user document
+          { new: true } //basically will ensure that the new user document is returned to the client side or database instead of the old user document
         );
       })
       .then((dbUserData) => {
-        //if all goes well this will return the user data to the client
         if (!dbUserData) {
-          //if the user data is not found then this will return a status code of 404 and the error message in json format to the client
-          res.status(404).json({ message: "No user found with this id" });
-          return; //returns to the catch block below and does not execute the next line
-        }
-        res.json(dbUserData); //this will return the user data in json format to the client if all goes well
-      })
-      .catch((err) => res.status(400).json(err)); //this will catch any errors that may occur
-  },
-
-  //update thought by id
-  //basically making a function named updateThought that will update a thought in the database
-  updateThought({ params, body }, res) {
-    //this will update a thought with the id that is passed in the url and the body that is passed in the request body (the updated thought)
-    Thoughts.findOneAndUpdate({ _id: params.id }, body, { new: true })
-      .then((dbThoughtData) => {
-        //this will return the thought data to the client if all goes well
-        if (!dbThoughtData) {
-          //if the thought data is not found then this will return a status code of 404 and the error message in json format to the client
-          res.status(404).json({ message: "No thought found with this id" });
+          res.status(404).json({ message: "No User with this ID" });
           return;
         }
-        res.json(dbThoughtData); // this will return the thought data in json format to the client if all goes well
+        res.json(dbUserData); //if all goes well then return the user in the json format to the client side or database
+      })
+      .catch((err) => res.json(err));
+  },
+  //update thought by it's id
+  updateThought({ params, body }, res) {
+    Thoughts.findOneAndUpdate({ _id: params.id }, body, { new: true }) //_id: params.id is the id of the thought to be updated and body is the updated thought object which is the thought to be updated
+      .then((dbThoughtData) => {
+        if (!dbThoughtData) {
+          res.status(404).json({ message: "No thought with this ID" });
+          return;
+        }
+        res.json(dbThoughtData); //if all goes well then return the thought in the json format to the client side or database
       })
       .catch((err) => res.status(400).json(err));
   },
-
-  //delete thought by id
-  //basically making a function named deleteThought that will delete a thought in the database
+  // delete a thought
   deleteThought({ params }, res) {
-    //params here is the id that is passed in the url
-    Thoughts.findOneAndDelete({ _id: params.id }) //this will find the thought in the database with the id that is passed in the url
+    //destructuring the params object which is the id of the thought to be deleted
+    //then delete the thought in the database by the id of the thought
+    //then return the thought in the json format to the client side or database
+    //if there is an error in the database then return the error to the client side or database
+    //if there is no thought with this id then return the error to the client side or database
+    // if all goes well then return the thought in the json format to the client side or database
+    Thoughts.findOneAndDelete({ _id: params.id }) //destructuring the params object which is the id of the thought to be deleted // _id is the unique id of the thought //and params.id is the id of the thought to be deleted
       .then((dbThoughtData) => {
         if (!dbThoughtData) {
-          res.status(404).json({ message: "No thought found with this id" });
+          res.status(404).json({ message: "No thought with this ID" });
           return;
         }
         res.json(dbThoughtData);
       })
       .catch((err) => res.status(400).json(err));
   },
-
-  // add reaction to a thought
-  //basically making a function named addReaction that will add a reaction to a thought in the database and will return the thought data to the client if all goes well
+  // add Reaction
   addReaction({ params, body }, res) {
-    //params here is the id that is passed in the url //body here is the reaction that is passed in the request body
+    //params are basically ids of whatever the user is reacting to and body is the reaction object which is the reaction to be added to the database
     Thoughts.findOneAndUpdate(
-      //this is a mongoose method that will find the thought with the id that is passed in the url and update the thought with the reaction
-      { _id: params.id.thoughtId }, //this is the id of the thought that is passed in the url
-      { $addToSet: { reactions: body } }, //this is the reaction that is passed in the request body and will add it to the thought's reactions array
-      { new: true } // this is a mongoose method that will return the updated thought data to the client
+      { _id: params.thoughtId }, //what is being reacted to is the thought id
+      { $addToSet: { reactions: body } }, // $addToSet is a mongoose method which adds the reaction to the reactions array of the thought document
+      { new: true } //ensures that the new thought document is new and not the old thought document
     )
       .then((dbThoughtData) => {
-        //this will return the thought data to the client if all goes well
         if (!dbThoughtData) {
-          res.status(404).json({ message: "No thought found with this id" });
-          return; //returns to the catch block below and does not execute the next line
+          res.status(404).json({ message: "No thought with this id" });
+          return;
         }
-        res.json(dbThoughtData); //this will return the thought data in json format to the client if all goes well
+        res.json(dbThoughtData);
       })
-      .catch((err) => res.status(400).json(err));
+      .catch((err) => res.json(err));
   },
 
-  // remove reaction from a thought
-  // bascially making a function named removeReaction that will remove a reaction from a thought in the database and will return the thought data to the client if all goes well
-  removeReaction({ params }, res) {
-    //params here is the id that is passed in the url res here is the response that is passed in the request body
+  //delete Reaction
+  deleteReaction({ params }, res) {
     Thoughts.findOneAndUpdate(
-      //
-      { _id: params.thoughtId }, //this is the id of the thought that is passed in the url
-      { $pull: { reactions: { _id: params.reactionId } } }, // this is a mongoose method that will remove the reaction from the thought's reactions array
+      { _id: params.thoughtId },
+      { $pull: { reactions: { reactionId: params.reactionId } } },
       { new: true }
     )
-      .then((dbThoughtData) => res.json(dbThoughtData)) //this will return the thought data to the client if all goes well
-      .catch((err) => res.status(400).json(err)); //this will catch any errors that may occur
+      .then((dbThoughtData) => res.json(dbThoughtData))
+      .catch((err) => res.json(err));
   },
 };
 
-module.export = ThoughtController; //this exports the ThoughtController
+module.exports = thoughtController;

@@ -1,25 +1,21 @@
-const { Schema, model, Types } = require("mongoose"); //require mongoose + Types for ObjectId
-const dateFormat = require("../utils/dateFormat"); //importing dateFormat from utils folder
+const { Schema, model, Types } = require("mongoose");
+const dateFormat = require("../utils/dateFormat");
 
 const ReactionSchema = new Schema(
   {
     reactionId: {
-      type: Schema.Types.ObjectId,
-      default: new Types.ObjectId(), //Types.ObjectId() basically generates a new ObjectId for every new Reaction
+      type: Schema.Types.ObjectId, //this will be the id of the user who reacted
+      default: () => new Types.ObjectId(), //default value for the id
     },
-
     reactionBody: {
       type: String,
       required: true,
-      min: 1,
-      mac: 280,
+      maxlength: 280,
     },
-
     username: {
       type: String,
       required: true,
     },
-
     createdAt: {
       type: Date,
       default: Date.now,
@@ -27,54 +23,53 @@ const ReactionSchema = new Schema(
     },
   },
   {
+    //toJSON is basically a method that converts the object to a json object
     toJSON: {
+      //this will remove the __v and _id from the response
       getters: true,
     },
   }
 );
 
-// this is the schema for the thoughts collection
 const ThoughtSchema = new Schema(
   {
     thoughtText: {
-      type: String, // This makes sure that the name is a string
-      required: "You need to provide a thought name!", // This sets an acutal error message instead of the default one
-      minlength: 1, //must be between 3 and 100 characters
+      type: String,
+      required: true,
       maxlength: 280,
-      trim: true, //trim will remove all the white spaces from the beginning and end of the string
     },
-
     createdAt: {
       type: Date,
       default: Date.now,
       get: (createdAtVal) => dateFormat(createdAtVal),
     },
-
     username: {
       type: String,
-      required: "You need to provide a thought username!",
+      required: true,
     },
+    //what were doing here is that we are creating a new array of reactions and we are adding the reaction schema to it so that we can add the reactions to the thought document
+    //or in better words we are adding the reaction schema to the thought document
+    //is schema the same as document? yes
     reactions: [ReactionSchema],
   },
-  // getters are used to format the date
-  // virtuals are used for the comments array in the thought object
   {
     toJSON: {
-      getters: true,
-      virtuals: true,
+      virtuals: true, //this will add the virtuals to the response
+      getters: true, //this will add the getters to the response
     },
-    id: false,
+    id: false, //this will remove the id from the response
   }
 );
 
-//this virtual is used to get the number of comments for a thought in the thought list page
-//and stores it as reactionCount in the thought object
-//so that it can be displayed in the thought list page or in our case the db
-// then returns the length of reactions array in the thought object subdocument object
+// get total count of reactions and replies on retrieval
+// this is a virtual field that will be added to the response of the thought document
+// and it will be called by the getter function which is defined in the schema
+//virtuals are not stored in the database and are only added to the response which basically means that we are adding the virtuals to the response of the thought document
+//what is the response of the thought document? the thought document is the response of the get request or post request put request or delete request
 ThoughtSchema.virtual("reactionCount").get(function () {
   return this.reactions.length;
 });
 
-const Thought = model("Thought", ThoughtSchema);
+const Thoughts = model("Thoughts", ThoughtSchema); //this is the model that we are exporting from this file and this is the name of the model
 
-module.exports = Thought;
+module.exports = Thoughts;

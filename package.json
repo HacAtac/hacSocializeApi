@@ -17,8 +17,10 @@
     "url": "https://github.com/HacAtac/hacSocializeApi/issues"
   },
   "homepage": "https://github.com/HacAtac/hacSocializeApi#readme",
+  
   "dependencies": {
     "express": "^4.17.1",
-    "mongoose": "^6.0.14"
+    "mongoose": "^5.11.4" 
+    
   }
 }
