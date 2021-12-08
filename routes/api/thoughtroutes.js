@@ -24,7 +24,7 @@ router
 
 router
   .route("/:thoughtId/reactions") //to add a reaction to a thought do a post request to /api/thoughts/:thoughtId/reactions and send the body of the request
-  .post(addReaction)
+  .post(addReaction)//route will be /api/thoughts/:thoughtId/reactions
   .delete(deleteReaction);
 
 module.exports = router;

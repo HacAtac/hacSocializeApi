@@ -28,7 +28,7 @@ router
 // https://localhost:5000/api/users/:id/friends/:friendId
 router
   .route("/:id/friends/:friendsId")
-  .post(addFriend) // POST http://localhost:5000/api/users/:id/friends
-  .delete(removeFriend);
+  .post(addFriend) // POST http://localhost:5000/api/users/:id/friends/:friendId
+  .delete(removeFriend); // DELETE http://localhost:5000/api/users/:id/friends/:friendId
 
 module.exports = router;
