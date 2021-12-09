@@ -23,8 +23,11 @@ router
   .delete(deleteThought);
 
 router
-  .route("/:thoughtId/reactions") //to add a reaction to a thought do a post request to /api/thoughts/:thoughtId/reactions and send the body of the request
-  .post(addReaction)//route will be /api/thoughts/:thoughtId/reactions
-  .delete(deleteReaction);
+  .route("/:thoughtId/reactions/:reactionId") //to add a reaction to a thought do a post request to /api/thoughts/:thoughtId/reactions and send the body of the request
+  //route will be /api/thoughts/:thoughtId/reactions/:reactionId
+  .delete(deleteReaction); // route will be /api/thoughts/:thoughtId/reactions/:reactionId
+
+router
+  .route("/:thoughtId/reactions").post(addReaction);
 
 module.exports = router;

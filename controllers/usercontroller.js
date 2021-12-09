@@ -69,7 +69,8 @@ const userController = {
           res.status(404).json({ message: "no user found with this ID" });
           return;
         }
-        Thoughts.deleteMany({_id: {$in:dbUserData.thoughts}})
+        Thoughts.deleteMany({_id: {$in:dbUserData.thoughts}}) //this will delete all the thoughts associated with the user that is being deleted by the id
+        //$in is a mongoose operator that will check if the id of the thought is in the array of ids of the thoughts associated with the user
         res.json(dbUserData);
       })
       
