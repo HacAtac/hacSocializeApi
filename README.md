@@ -101,7 +101,7 @@ LinkedIn: https://www.linkedin.com/in/jordan-hackworth-898205217/ </br>
 E-mail: jhack00@icloud.com </br>
 
 <a href ="https://github.com/HacAtac/hacSocializeApi" target="_blank">Link to my git hub application.</a></br>
-<a href ="https://watch.screencastify.com/v/zXc3jY3S0y3Hv9QVfF1Y" target="_blank">Link to my video-walkthrough!</a>
+<a href ="https://watch.screencastify.com/v/1XPrJoWHBba2pWEHvBQ4" target="_blank">Link to my video-walkthrough!</a>
 
 <h3>Screenshot of app!</h3>
 
