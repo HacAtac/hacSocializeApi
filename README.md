@@ -5,7 +5,7 @@
 I've made a back end social media Restfull API that utilizes CRUD methods. </br>
  Utilizes virtuals/getters subdocuments and .populate to show and not store data as an object inside of the parent object.</br> 
  Utilizing CRUD methods for User/Thoughts/Reactions/Friends </br> 
- I've also have made it possible to delete the thoughts in a deleted User by using as follows: </br> 
+ I've also have made it possible to delete the thoughts in a deleted User by using as follows. </br> 
  Thoughts.deleteMany({_id: {$in:dbUserData.thoughts}}) </br>
  This essentially will delete all the thoughts associated with the user that is being deleted by the id.</p> </br>
 
