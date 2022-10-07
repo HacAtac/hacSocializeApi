@@ -17,10 +17,10 @@
     "url": "https://github.com/HacAtac/hacSocializeApi/issues"
   },
   "homepage": "https://github.com/HacAtac/hacSocializeApi#readme",
-  
   "dependencies": {
+    "dotenv": "^16.0.3",
     "express": "^4.17.1",
-    "mongoose": "^5.11.4" 
-    
+    "mongoose": "^6.0.8",
+    "colors": "^1.4.0"
   }
 }
