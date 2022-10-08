@@ -4,8 +4,12 @@
   "description": "- [Description](#Description)\r - [Technologies Used](#Technologies)\r - [Technical Criteria](#Technical)\r - [Contributing](#contributing)\r - [Language](#language)\r - [User Story](#user_story)",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server/server.js",
+    "server": "nodemon server/server.js",
+    "client": "npm start --prefix client",
+    "post-install": "npm install && npm install --prefix client",
+    "client-build": "npm run build --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "repository": {
     "type": "git",
@@ -18,9 +22,24 @@
   },
   "homepage": "https://github.com/HacAtac/hacSocializeApi#readme",
   "dependencies": {
-    "dotenv": "^16.0.3",
+    "@sendgrid/mail": "^7.7.0",
+    "axios": "^0.21.4",
+    "bcryptjs": "^2.4.3",
+    "colors": "^1.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "express-async-handler": "^1.1.4",
+    "express-mongo-sanitize": "^2.2.0",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.8",
-    "colors": "^1.4.0"
+    "morgan": "^1.10.0",
+    "xss-clean": "^0.1.1",
+    "path": "^0.12.7",
+    "hpp": "^0.2.3"
+  },
+  "devDependencies": {
+    "concurrently": "^6.2.2",
+    "nodemon": "^2.0.13"
   }
 }
