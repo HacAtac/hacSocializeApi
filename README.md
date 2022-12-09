@@ -9,16 +9,6 @@ I've made a back end social media Restfull API that utilizes CRUD methods. </br>
  Thoughts.deleteMany({_id: {$in:dbUserData.thoughts}}) </br>
  This essentially will delete all the thoughts associated with the user that is being deleted by the id.</p> </br>
 
-  <ul>
-    <li>First: I've connected to a mongoose server.</li>
-    <li>Second: I've installed all dependencies needed for this project.</li>
-    <li>Third: I've made models for Thoughts User and exported them.</li>
-    <li>Fourth: I've made my controllers using CRUD methods then exported them to use in routes directory.</li>
-    <li>Fifth: I've made a routes directory to utilize MVC pattern and seperation of concerns. Then I've imported the functions from controllers then exported router and made get post put delete capabilities for my controllers. </li>
-    <li>Sixth: Once this was complete I've tested all methods in insomnia to ensure a fully functional back-end routing system </li>
-    <li>Lastly: I've been studying react and plan on making this into a full stack react app to show off my MERN stack! but this will come at a later time. </li>
-  </ul>
-
 ## Usage
 
 1: Make sure you have MongoDB installed on your machine (if you don't, follow the instructions on the MongoDB Website)</br>
